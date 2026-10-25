@@ -47,9 +47,10 @@ button{font-family:inherit;color:inherit}
 .go{width:36px;height:36px;border-radius:50%;border:1px solid var(--line);cursor:pointer;color:#1c2230;display:grid;place-items:center;background:linear-gradient(180deg,#fff,#cdd2de);box-shadow:0 3px 8px rgba(30,40,70,.18)}
 .go svg{margin-left:2px}
 .fabs{position:fixed;right:calc(16px + env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));display:flex;gap:10px;z-index:20}
-.fab{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--panel);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);display:grid;place-items:center;cursor:pointer;box-shadow:0 4px 12px rgba(30,40,70,.12);color:var(--ink)}
+.fab{width:44px;height:44px;border:0;background:none;display:grid;place-items:center;cursor:pointer;color:var(--ink);transition:opacity .2s}.fab:hover{opacity:.6}
 .fab svg{width:22px;height:22px}
-.fab.on{background:#1c2230;color:#fff;animation:pulse 1.8s ease-in-out infinite}
+.fab.on svg{animation:beat 1.6s ease-in-out infinite}
+@keyframes beat{50%{transform:scale(1.18)}}
 .toast{position:fixed;left:50%;bottom:76px;transform:translateX(-50%);background:#1c2230;color:#fff;font-size:13px;padding:9px 16px;border-radius:20px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:40;max-width:90vw;text-align:center}
 .toast.on{opacity:1}
 button:focus-visible,input:focus-visible{outline:2px solid #5b7cff;outline-offset:2px}
