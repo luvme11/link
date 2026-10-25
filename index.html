@@ -134,7 +134,11 @@ const artOf=(it,i)=>it.img?'url("'+it.img+'")':GR[i%GR.length];
 /* carousel */
 let cur=0,discs=[],n=0;const stage=$("#stage"),dots=$("#dots");
 const gap=()=>innerWidth<=480?105:130;
-function open(u){if(u)window.open(u,"_blank","noopener")}
+function open(u){u=(u||"").trim();
+  if(!u||u==="https://"){toast("링크 주소가 비어 있어요. 관리자에서 넣어 주세요");return}
+  if(!/^[a-z][a-z0-9+.-]*:/i.test(u))u="https://"+u.replace(/^\/+/,"");
+  if(!/^(https?|mailto|tel):/i.test(u)){toast("열 수 없는 주소예요");return}
+  const a=document.createElement("a");a.href=u;a.target="_blank";a.rel="noopener noreferrer";document.body.appendChild(a);a.click();a.remove()}
 function go(i){if(!n)return;cur=(i+n)%n;render()}
 function build(){
   stage.innerHTML="";dots.innerHTML="";n=D.items.length;if(cur>=n)cur=Math.max(0,n-1);
