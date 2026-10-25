@@ -1,0 +1,47 @@
+{
+  "site": {
+    "title": "Link Album",
+    "speed": 12
+  },
+  "music": {
+    "url": "",
+    "volume": 60
+  },
+  "items": [
+    {
+      "id": "7irknw",
+      "title": "X",
+      "sub": "",
+      "url": "https://x.com/noxuelux",
+      "img": "images/7irknw-1792892889256.jpg"
+    },
+    {
+      "id": "550ou4",
+      "title": "Home",
+      "sub": "메인 홈",
+      "url": "https://luvme11.github.io/NEW-HOME/index.html#home",
+      "img": "images/550ou4-1792892891421.jpg"
+    },
+    {
+      "id": "ihgsgv",
+      "title": "chanhee",
+      "sub": "임찬희×선유이",
+      "url": "https://luvme11.github.io/chanhee1/",
+      "img": "images/ihgsgv-1792892893724.jpg"
+    },
+    {
+      "id": "y4w1yh",
+      "title": "7",
+      "sub": "7×22",
+      "url": "https://luvme11.github.io/7/",
+      "img": "images/y4w1yh-1792892895687.jpg"
+    },
+    {
+      "id": "vcbfoj",
+      "title": "OOC",
+      "sub": "OOC 백업",
+      "url": "https://",
+      "img": "images/vcbfoj-1792892897869.jpg"
+    }
+  ]
+}
