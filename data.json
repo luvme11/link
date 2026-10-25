@@ -1,7 +1,9 @@
 {
   "site": {
     "title": "Link",
-    "speed": 12
+    "speed": 12,
+    "favicon": "images/favicon-1792892956392.png",
+    "cursor": "images/cursor-1792892958306.png"
   },
   "music": {
     "url": "https://youtu.be/eOLHh_HtvkM?si=iWAWdjoVLngb38Jv",
