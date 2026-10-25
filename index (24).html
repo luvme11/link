@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Link Album</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+:root{--bg:#f4f5f8;--ink:#1c2230;--mute:#7b8394;--panel:rgba(255,255,255,.78);--line:rgba(20,30,50,.08);--veil:255,255,255;--ring:rgba(255,255,255,.75);--dot:#cfd3dc;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12141a;--ink:#eef0f6;--mute:#8e96a8;--panel:rgba(34,38,50,.75);--line:rgba(255,255,255,.08);--veil:18,20,26;--ring:rgba(255,255,255,.14);--dot:#3a4050}}
+:root[data-theme="dark"]{--bg:#12141a;--ink:#eef0f6;--mute:#8e96a8;--panel:rgba(34,38,50,.75);--line:rgba(255,255,255,.08);--veil:18,20,26;--ring:rgba(255,255,255,.14);--dot:#3a4050}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:"Pretendard Variable",Pretendard,"Apple SD Gothic Neo","Noto Sans KR",system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;
+background-image:radial-gradient(circle at 85% 55%,rgba(150,160,185,.18),transparent 45%),radial-gradient(circle at 10% 10%,rgba(150,160,185,.12),transparent 35%)}
+button{font-family:inherit;color:inherit}
+.stage{position:relative;width:min(620px,100vw);height:290px;touch-action:pan-y;-webkit-mask-image:linear-gradient(90deg,transparent,#000 16%,#000 84%,transparent);mask-image:linear-gradient(90deg,transparent,#000 16%,#000 84%,transparent)}
+.disc{position:absolute;left:50%;top:50%;width:210px;height:210px;margin:-105px 0 0 -105px;cursor:pointer;transition:transform .65s cubic-bezier(.25,.8,.25,1),opacity .5s}
+.spin{position:absolute;inset:0;border-radius:50%;background:var(--art);background-size:cover;background-position:center;box-shadow:0 10px 30px rgba(30,40,70,.18);animation:spin 12s linear infinite}
+.spin::before{content:"";position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg,rgba(255,255,255,0) 0,rgba(255,255,255,.4) 8%,rgba(255,255,255,0) 22%,rgba(255,255,255,0) 50%,rgba(255,255,255,.32) 58%,rgba(255,255,255,0) 72%)}
+.hole{position:absolute;left:50%;top:50%;width:60px;height:60px;margin:-30px 0 0 -30px;border-radius:50%;background:rgba(255,255,255,.55);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);border:1px solid rgba(255,255,255,.8)}
+.hole::after{content:"";position:absolute;inset:18px;border-radius:50%;border:2px solid rgba(60,70,90,.35);background:rgba(255,255,255,.7)}
+.veil,.fade{position:absolute;inset:0;border-radius:50%;pointer-events:none;transition:opacity .5s}
+.veil{background:linear-gradient(180deg,rgba(var(--veil),.15),rgba(var(--veil),.7))}
+.fade{background:linear-gradient(0deg,rgba(255,255,255,.9) 0,rgba(255,255,255,.6) 28%,rgba(255,255,255,0) 52%);opacity:0}
+.ring{position:absolute;inset:-16px;border-radius:50%;border:7px solid var(--ring);box-shadow:0 0 0 1px var(--line);opacity:0;transition:opacity .5s;pointer-events:none}
+.lbl{position:absolute;left:0;right:0;bottom:18px;text-align:center;opacity:0;transition:opacity .4s;color:#1c2230;pointer-events:none;padding:0 20px}
+.lbl b{display:block;font-size:17px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lbl span{font-size:12px;color:#59627a;white-space:nowrap}
+.disc.on .ring,.disc.on .lbl,.disc.on .fade{opacity:1}
+.disc.on .veil{opacity:0}
+.nav{display:flex;align-items:center;gap:18px;margin-top:6px}
+.arrow{background:none;border:0;cursor:pointer;padding:8px;border-radius:8px;display:grid;place-items:center}
+.arrow:hover{background:var(--line)}
+.dots{display:flex;gap:9px}
+.dots button{width:7px;height:7px;padding:0;border:0;border-radius:50%;background:var(--dot);cursor:pointer;transition:all .3s}
+.dots button.on{background:var(--ink);width:9px;height:9px}
+.bar{margin-top:26px;width:min(440px,calc(100vw - 32px));display:flex;align-items:center;gap:12px;padding:10px 14px 10px 10px;border-radius:16px;background:var(--panel);border:1px solid var(--line);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.tile{width:40px;height:40px;border-radius:11px;flex:none;display:grid;place-items:center;background:linear-gradient(145deg,#f4f7fc,#d9e2f1);box-shadow:inset 0 0 0 1px rgba(255,255,255,.8),0 2px 6px rgba(30,40,70,.12)}
+.tile svg{width:28px;height:28px;animation:spin 6s linear infinite}
+.meta{flex:1;min-width:0}
+.meta small{display:block;font-size:9px;letter-spacing:.14em;color:var(--mute);font-weight:600}
+.meta strong{display:block;font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.meta span{font-size:11px;color:var(--mute)}
+.go{width:36px;height:36px;border-radius:50%;border:1px solid var(--line);cursor:pointer;color:#1c2230;display:grid;place-items:center;background:linear-gradient(180deg,#fff,#cdd2de);box-shadow:0 3px 8px rgba(30,40,70,.18)}
+.go svg{margin-left:2px}
+.fabs{position:fixed;right:calc(16px + env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));display:flex;gap:10px;z-index:20}
+.fab{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--panel);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);display:grid;place-items:center;cursor:pointer;box-shadow:0 4px 12px rgba(30,40,70,.12);color:var(--ink)}
+.fab svg{width:22px;height:22px}
+.fab.on{background:#1c2230;color:#fff;animation:pulse 1.8s ease-in-out infinite}
+.toast{position:fixed;left:50%;bottom:76px;transform:translateX(-50%);background:#1c2230;color:#fff;font-size:13px;padding:9px 16px;border-radius:20px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:40;max-width:90vw;text-align:center}
+.toast.on{opacity:1}
+button:focus-visible,input:focus-visible{outline:2px solid #5b7cff;outline-offset:2px}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pulse{50%{box-shadow:0 0 0 7px rgba(28,34,48,.12)}}
+@media (max-width:480px){.disc{width:170px;height:170px;margin:-85px 0 0 -85px}.stage{height:250px}.hole{width:48px;height:48px;margin:-24px 0 0 -24px}.hole::after{inset:14px}}
+
+/* admin */
+.adm{position:fixed;inset:0;background:rgba(var(--veil),.55);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);z-index:30;display:grid;place-items:center;padding:12px;color:var(--ink)}
+.adm[hidden]{display:none}
+.win{width:min(620px,100%);height:min(640px,100%);background:var(--bg);border-radius:24px;border:1px solid var(--line);box-shadow:0 24px 60px rgba(30,40,70,.18);display:flex;flex-direction:column;overflow:hidden}
+.wh{display:flex;justify-content:space-between;align-items:center;padding:16px 20px 6px;font-size:15px;font-weight:700}
+.wh button{width:30px;height:30px;border-radius:50%;border:1px solid var(--line);background:var(--panel);cursor:pointer;font-size:16px;line-height:1}
+.wb{flex:1;min-height:0;display:flex;flex-direction:column}
+.wb nav{display:flex;gap:6px;padding:8px 20px 12px;overflow-x:auto}
+.wb nav button{border:1px solid var(--line);background:none;border-radius:999px;padding:7px 14px;font-size:13px;cursor:pointer;color:var(--mute);white-space:nowrap}
+.wb nav button.on{background:var(--ink);color:var(--bg);border-color:var(--ink);font-weight:600}
+.wb section{flex:1;padding:4px 20px 20px;overflow:auto}
+.wb h2{display:none}
+.d{font-size:12px;color:var(--mute);line-height:1.6;margin-bottom:14px}
+.f{display:block;font-size:12px;color:var(--mute);margin-bottom:10px}
+.wb input[type=text],.wb input[type=password]{width:100%;margin-top:5px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--panel);font:inherit;font-size:14px;color:var(--ink)}
+.wb select{width:100%;margin-top:5px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--panel);font:inherit;font-size:14px;color:var(--ink)}
+.wb input[type=range]{width:100%;margin-top:8px;accent-color:var(--ink)}
+.r{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;align-items:center}
+.pill{border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:8px 14px;font-size:12px;font-weight:600;cursor:pointer;color:var(--ink);display:inline-block}
+.pill.sv{background:var(--ink);color:var(--bg);border-color:var(--ink);margin-left:auto}
+.row{border:1px solid var(--line);border-radius:18px;padding:12px;margin-bottom:10px;background:var(--panel)}
+.rh{display:flex;gap:8px;align-items:center}
+.rh input{flex:1}
+.rh input[type=text]{margin-top:0}
+.bd{flex:none;font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--mute);width:22px}
+.ib{width:30px;height:30px;border-radius:50%;border:1px solid var(--line);background:none;cursor:pointer;padding:0;font-size:14px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.g2 .f{margin:0}
+.im{display:flex;align-items:center;gap:8px;margin-top:10px}
+.th{width:44px;height:44px;border-radius:50%;background-size:cover;background-position:center;border:1px solid var(--line);flex:none}
+.wf{padding:11px 20px;border-top:1px solid var(--line);font-size:12px;color:var(--mute)}
+@media (max-width:640px){.g2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="stage" id="stage"></div>
+<div class="nav">
+  <button class="arrow" id="prev" aria-label="이전"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M3 2h2v12H3zM13 2v12L6 8z" fill="currentColor"/></svg></button>
+  <div class="dots" id="dots"></div>
+  <button class="arrow" id="next" aria-label="다음"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M11 2h2v12h-2zM3 2l7 6-7 6z" fill="currentColor"/></svg></button>
+</div>
+<div class="bar">
+  <div class="tile"><svg viewBox="0 0 40 40" aria-hidden="true"><defs><linearGradient id="cdg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8fa3c4"/><stop offset=".5" stop-color="#4a5675"/><stop offset="1" stop-color="#2b3550"/></linearGradient></defs><circle cx="20" cy="20" r="18" fill="url(#cdg)"/><circle cx="20" cy="20" r="13" fill="none" stroke="#fff" stroke-opacity=".18"/><path d="M20 4a16 16 0 0 1 14 8" fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="2" stroke-linecap="round"/><path d="M20 36a16 16 0 0 1-14-8" fill="none" stroke="#fff" stroke-opacity=".45" stroke-width="2" stroke-linecap="round"/><circle cx="20" cy="20" r="6.5" fill="#eef2f9"/><circle cx="20" cy="20" r="2.6" fill="#2b3550"/></svg></div>
+  <div class="meta"><small id="trk"></small><strong id="ttl"></strong><span id="sub"></span></div>
+  <button class="go" id="gob" aria-label="링크 열기"><svg width="12" height="12" viewBox="0 0 12 12"><path d="M1 0l10 6-10 6z" fill="currentColor"/></svg></button>
+</div>
+<div class="fabs">
+  <button class="fab" id="hs" aria-label="음악 재생" title="음악 재생"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15v-3a8 8 0 0 1 16 0v3"/><rect x="3" y="13.5" width="4.2" height="7" rx="1.8"/><rect x="16.8" y="13.5" width="4.2" height="7" rx="1.8"/><path d="M19 20.5c0 1.4-2 2-5 2"/></svg></button>
+  <button class="fab" id="adb" aria-label="관리자" title="관리자"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5.5l11-2V16"/><circle cx="6.5" cy="18" r="2.6"/><circle cx="17.5" cy="16" r="2.6"/></svg></button>
+</div>
+<div class="toast" id="toast"></div>
+<div class="adm" id="adm" hidden>
+  <div class="win" role="dialog" aria-label="관리자">
+    <div class="wh"><b>관리자</b><button id="x" aria-label="닫기">×</button></div>
+    <div class="wb"><nav id="nv"></nav><section id="pn"></section></div>
+    <div class="wf" id="st">준비됐어요.</div>
+  </div>
+</div>
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const GR=["linear-gradient(135deg,#f7b2c4,#c9a7f2 55%,#8fb8ff)","linear-gradient(135deg,#9fc8ff,#6e8cf0 50%,#2e3a5c)","linear-gradient(135deg,#ffc2a8,#f07a7a 55%,#6c3a52)","linear-gradient(135deg,#d6f0c8,#7fcfb0 55%,#2f6f7e)","linear-gradient(135deg,#d0d4e0,#7b8499 55%,#262c3d)","linear-gradient(135deg,#ffe6a8,#f0b36e 55%,#a8566a)"];
+const rid=()=>Math.random().toString(36).slice(2,8);
+let D={site:{title:"Link Album",speed:12},music:{url:"",volume:60},items:[
+ {id:rid(),title:"Instagram",sub:"Main Account",url:"https://instagram.com/",img:""},
+ {id:rid(),title:"Twitter",sub:"Backup Account",url:"https://twitter.com/",img:""},
+ {id:rid(),title:"YouTube",sub:"Channel",url:"https://youtube.com/",img:""}]};
+const LS="linkalbum.gh";let C={owner:"",repo:"",branch:"main",token:"",path:"data.json"};
+try{Object.assign(C,JSON.parse(localStorage.getItem(LS)||"{}"))}catch(e){}
+const saveC=()=>{try{localStorage.setItem(LS,JSON.stringify(C))}catch(e){}};
+const norm=d=>({site:Object.assign({title:"Link Album",speed:12,click:true,sound:"wood"},d.site),music:Object.assign({url:"",volume:60},d.music),items:(d.items||[]).map(x=>Object.assign({id:rid(),title:"",sub:"",url:"",img:""},x))});
+const artOf=(it,i)=>it.img?'url("'+it.img+'")':GR[i%GR.length];
+
+/* carousel */
+let cur=0,discs=[],n=0;const stage=$("#stage"),dots=$("#dots");
+const gap=()=>innerWidth<=480?105:130;
+function open(u){if(u)window.open(u,"_blank","noopener")}
+function go(i){if(!n)return;cur=(i+n)%n;render()}
+function build(){
+  stage.innerHTML="";dots.innerHTML="";n=D.items.length;if(cur>=n)cur=Math.max(0,n-1);
+  discs=D.items.map((it,i)=>{
+    const d=document.createElement("div");d.className="disc";d.setAttribute("role","button");
+    d.innerHTML='<div class="spin"><div class="hole"></div></div><div class="veil"></div><div class="fade"></div><div class="ring"></div><div class="lbl"><b></b><span></span></div>';
+    const sp=d.querySelector(".spin");sp.style.setProperty("--art",artOf(it,i));
+    d.onclick=()=>{if(i===cur)open(D.items[i].url);else go(i)};
+    stage.appendChild(d);
+    const b=document.createElement("button");b.onclick=()=>go(i);dots.appendChild(b);return d;
+  });
+  setSpeed();render();
+}
+function setSpeed(){discs.forEach((d,i)=>{d.querySelector(".spin").style.animationDuration=(D.site.speed+i*1.3)+"s"})}
+function render(){
+  discs.forEach((d,i)=>{
+    let o=((i-cur)%n+n)%n;if(o>n/2)o-=n;
+    const a=Math.abs(o),s=o===0?1:a===1?.84:.7,it=D.items[i];
+    d.style.transform="translateX("+o*gap()+"px) scale("+s+")";
+    d.style.opacity=a>2?0:1;d.style.zIndex=10-a;d.style.pointerEvents=a>2?"none":"auto";
+    d.classList.toggle("on",o===0);
+    d.setAttribute("aria-label",it.title);
+    d.querySelector("b").textContent=it.title;d.querySelector(".lbl span").textContent=it.sub;
+  });
+  [...dots.children].forEach((b,i)=>{b.classList.toggle("on",i===cur);b.setAttribute("aria-label",D.items[i].title)});
+  const l=D.items[cur]||{title:"",sub:""};
+  $("#trk").textContent=n?"TRACK "+String(cur+1).padStart(2,"0"):"";
+  $("#ttl").textContent=l.title;$("#sub").textContent=l.sub;document.title=D.site.title||"Link Album";
+}
+$("#prev").onclick=()=>go(cur-1);$("#next").onclick=()=>go(cur+1);
+$("#gob").onclick=()=>open((D.items[cur]||{}).url);
+addEventListener("keydown",e=>{
+  if(e.key==="Escape")closeAdm();
+  if(!$("#adm").hidden||/INPUT|TEXTAREA/.test(e.target.tagName))return;
+  if(e.key==="ArrowLeft")go(cur-1);if(e.key==="ArrowRight")go(cur+1);
+});
+let sx=null;
+stage.addEventListener("pointerdown",e=>{sx=e.clientX});
+stage.addEventListener("pointerup",e=>{if(sx!==null&&Math.abs(e.clientX-sx)>40)go(cur+(e.clientX<sx?1:-1));sx=null});
+addEventListener("resize",render);
+let tt;function toast(t){const e=$("#toast");e.textContent=t;e.classList.add("on");clearTimeout(tt);tt=setTimeout(()=>e.classList.remove("on"),2600)}
+
+/* youtube (iframe + postMessage, 별도 스크립트 없음) */
+let ytf=null,playing=false;
+function ytParse(u){try{const x=new URL(u);let v=x.searchParams.get("v"),l=x.searchParams.get("list");if(x.hostname==="youtu.be")v=x.pathname.slice(1);const m=x.pathname.match(/\/(shorts|embed|live)\/([\w-]{6,})/);if(m)v=m[2];return{v:v,l:l}}catch(e){return{}}}
+function ytSrc(){const p=ytParse(D.music.url);if(!p.v&&!p.l)return null;const q="autoplay=1&enablejsapi=1&playsinline=1&loop=1&origin="+encodeURIComponent(location.origin);
+  if(p.v)return"https://www.youtube.com/embed/"+p.v+"?"+q+(p.l?"&list="+p.l:"&playlist="+p.v);return"https://www.youtube.com/embed/videoseries?list="+p.l+"&"+q}
+const cmd=(f,a)=>{if(ytf&&ytf.contentWindow)ytf.contentWindow.postMessage(JSON.stringify({event:"command",func:f,args:a||[]}),"*")};
+function resetYT(){if(ytf){ytf.remove();ytf=null}playing=false;$("#hs").classList.remove("on")}
+$("#hs").onclick=()=>{
+  if(!ytSrc()){toast("관리자 > 음악에서 유튜브 링크를 넣어 주세요");return}
+  if(!ytf){
+    ytf=document.createElement("iframe");ytf.allow="autoplay; encrypted-media";ytf.title="music";
+    ytf.style.cssText="position:fixed;left:-9999px;width:240px;height:135px;border:0";ytf.src=ytSrc();
+    ytf.onload=()=>{const s=()=>{if(ytf&&ytf.contentWindow)ytf.contentWindow.postMessage(JSON.stringify({event:"listening"}),"*");cmd("setVolume",[D.music.volume])};s();setTimeout(s,800);setTimeout(s,2200)};
+    document.body.appendChild(ytf);playing=true;
+  }else{playing=!playing;cmd(playing?"playVideo":"pauseVideo")}
+  $("#hs").classList.toggle("on",playing);
+};
+
+/* admin */
+let tab="gh";const TABS=[["gh","GitHub 설정"],["al","앨범(링크)"],["mu","음악"],["si","사이트"]];
+const say=t=>{$("#st").textContent=t};
+function openAdm(){$("#adm").hidden=false;drawAdm()}
+function closeAdm(){$("#adm").hidden=true}
+$("#adb").onclick=openAdm;$("#x").onclick=closeAdm;
+$("#adm").addEventListener("pointerdown",e=>{if(e.target.id==="adm")closeAdm()});
+function drawAdm(){
+  $("#nv").innerHTML=TABS.map(t=>'<button data-t="'+t[0]+'" class="'+(t[0]===tab?"on":"")+'">'+t[1]+'</button>').join("");
+  const sv='<div class="r"><button class="pill sv" data-a="save">저장 (GitHub)</button></div>';let h="";
+  if(tab==="gh"){
+    h='<h2>GitHub 설정</h2><p class="d">저장하면 이 저장소에 data.json과 images 폴더가 올라가요. 토큰은 저장소 Contents 권한을 Read and write로 준 Fine-grained token을 쓰는 걸 권장해요. 입력한 토큰은 이 브라우저에만 저장돼요.</p>'+
+    [["owner","사용자 이름 (owner)"],["repo","저장소 이름"],["branch","브랜치"],["path","데이터 파일 경로"],["token","토큰 (Personal access token)"]].map(k=>'<label class="f">'+k[1]+'<input data-c="'+k[0]+'" type="'+(k[0]==="token"?"password":"text")+'" value="'+esc(C[k[0]])+'" autocomplete="off"></label>').join("")+
+    '<div class="r"><button class="pill" data-a="test">연결 테스트</button><button class="pill" data-a="load">GitHub에서 불러오기</button></div>';
+  }else if(tab==="al"){
+    h='<h2>앨범(링크)</h2><p class="d">앨범마다 제목, 설명, 링크, 이미지를 넣을 수 있어요. 이미지는 CD 안에서 같이 돌아가요. 고친 뒤 꼭 저장을 눌러 주세요.</p>'+
+    D.items.map((it,i)=>'<div class="row"><div class="rh"><span class="bd">'+String(i+1).padStart(2,"0")+'</span><input type="text" data-i="'+i+'" data-k="title" value="'+esc(it.title)+'" placeholder="제목"><button class="ib" data-a="up" data-i="'+i+'" aria-label="위로">↑</button><button class="ib" data-a="dn" data-i="'+i+'" aria-label="아래로">↓</button><button class="ib" data-a="del" data-i="'+i+'" aria-label="삭제">×</button></div>'+
+    '<div class="g2"><label class="f">설명<input type="text" data-i="'+i+'" data-k="sub" value="'+esc(it.sub)+'"></label><label class="f">링크 주소<input type="text" data-i="'+i+'" data-k="url" value="'+esc(it.url)+'" placeholder="https://"></label></div>'+
+    '<div class="im"><span class="th" style="background-image:'+esc(artOf(it,i))+'"></span><label class="pill">이미지 첨부<input type="file" accept="image/*" data-img="'+i+'" hidden></label>'+(it.img?'<button class="pill" data-a="rm" data-i="'+i+'">이미지 제거</button>':'')+'</div></div>').join("")+
+    '<div class="r"><button class="pill" data-a="add">+ 앨범 추가</button><button class="pill sv" data-a="save">저장 (GitHub)</button></div>';
+  }else if(tab==="mu"){
+    h='<h2>음악</h2><p class="d">오른쪽 아래 헤드셋 버튼을 누르면 이 유튜브 링크가 재생돼요. 영상, 재생목록 링크 모두 가능해요.</p><label class="f">유튜브 링크<input type="text" data-m="url" value="'+esc(D.music.url)+'" placeholder="https://www.youtube.com/watch?v="></label><label class="f">음량 <b id="vv">'+D.music.volume+'</b><input type="range" min="0" max="100" data-m="volume" value="'+D.music.volume+'"></label>'+sv;
+  }else{
+    h='<h2>사이트</h2><p class="d">페이지 제목과 앨범이 도는 속도를 바꿔요. 숫자가 작을수록 빨라요.</p><label class="f">페이지 제목<input type="text" data-s="title" value="'+esc(D.site.title)+'"></label><label class="f">한 바퀴 도는 시간(초) <b id="sv">'+D.site.speed+'</b><input type="range" min="4" max="40" data-s="speed" value="'+D.site.speed+'"></label><label class="f"><input type="checkbox" data-s="click"'+(D.site.click===false?'':' checked')+'> 클릭 소리 켜기</label><label class="f">소리 종류<select data-s="sound"><option value="wood"'+(D.site.sound==='glass'||D.site.sound==='key'?'':' selected')+'>부드러운 톡</option><option value="glass"'+(D.site.sound==='glass'?' selected':'')+'>맑은 팅</option><option value="key"'+(D.site.sound==='key'?' selected':'')+'>키보드 딸깍</option></select></label>'+sv;
+  }
+  $("#pn").innerHTML=h;
+}
+$("#nv").onclick=e=>{const b=e.target.closest("[data-t]");if(b){tab=b.dataset.t;drawAdm()}};
+const pn=$("#pn");
+pn.oninput=e=>{const t=e.target,d=t.dataset;
+  if(d.c){C[d.c]=t.value.trim();saveC()}
+  else if(d.k){D.items[d.i][d.k]=t.value;render()}
+  else if(d.m){if(d.m==="volume"){D.music.volume=+t.value;$("#vv").textContent=t.value;cmd("setVolume",[+t.value])}else{D.music.url=t.value.trim();resetYT()}}
+  else if(d.s==="click"){D.site.click=t.checked;tick(false)}else if(d.s==="sound"){D.site.sound=t.value;tick(false)}else if(d.s){if(d.s==="speed"){D.site.speed=+t.value;$("#sv").textContent=t.value;setSpeed()}else{D.site.title=t.value;render()}}
+};
+pn.onchange=e=>{const t=e.target;if(t.dataset.img===undefined)return;const f=t.files[0];if(!f)return;
+  const im=new Image(),u=URL.createObjectURL(f);
+  im.onload=()=>{const k=Math.min(1,900/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);
+    const g=c.getContext("2d");g.fillStyle="#fff";g.fillRect(0,0,c.width,c.height);g.drawImage(im,0,0,c.width,c.height);
+    D.items[+t.dataset.img].img=c.toDataURL("image/jpeg",.86);URL.revokeObjectURL(u);build();drawAdm();say("이미지를 넣었어요. 저장을 눌러야 GitHub에 올라가요.")};
+  im.onerror=()=>say("이미지를 읽지 못했어요.");im.src=u};
+pn.onclick=e=>{const b=e.target.closest("[data-a]");if(!b)return;const a=b.dataset.a,i=+b.dataset.i,L=D.items;
+  if(a==="up"&&i>0){[L[i-1],L[i]]=[L[i],L[i-1]]}
+  else if(a==="dn"&&i<L.length-1){[L[i+1],L[i]]=[L[i],L[i+1]]}
+  else if(a==="del"){L.splice(i,1)}
+  else if(a==="rm"){L[i].img=""}
+  else if(a==="add"){L.push({id:rid(),title:"새 링크",sub:"",url:"https://",img:""});cur=L.length-1}
+  else if(a==="save")return save();
+  else if(a==="test")return test();
+  else if(a==="load")return loadGH();
+  build();drawAdm()};
+
+/* github */
+const ok=()=>{if(C.token&&C.owner&&C.repo)return true;say("GitHub 설정에서 사용자 이름, 저장소, 토큰을 먼저 입력해 주세요.");tab="gh";drawAdm();return false};
+const H=()=>({Authorization:"Bearer "+C.token,Accept:"application/vnd.github+json"});
+const base=()=>"https://api.github.com/repos/"+C.owner+"/"+C.repo;
+const ghc=(m,p,b)=>fetch(base()+"/contents/"+p.split("/").map(encodeURIComponent).join("/")+(m==="GET"?"?ref="+encodeURIComponent(C.branch)+"&t="+Date.now():""),{method:m,headers:H(),body:b?JSON.stringify(b):undefined});
+async function put(p,content,msg){const g=await ghc("GET",p);let sha;if(g.ok)sha=(await g.json()).sha;
+  const r=await ghc("PUT",p,{message:msg,content:content,branch:C.branch,sha:sha});if(!r.ok){let m="";try{m=(await r.json()).message}catch(e){}throw new Error(r.status+" "+m)}}
+async function test(){if(!ok())return;say("확인하는 중이에요…");try{const r=await fetch(base(),{headers:H()});const j=await r.json();say(r.ok?"연결됐어요: "+j.full_name+(j.permissions&&!j.permissions.push?" (쓰기 권한이 없어요)":""):"연결 실패: "+j.message)}catch(e){say("연결 실패: "+e.message)}}
+async function loadGH(){if(!ok())return;say("불러오는 중이에요…");try{const r=await ghc("GET",C.path);if(!r.ok)throw new Error(r.status+" 파일을 찾지 못했어요");const j=await r.json();
+  D=norm(JSON.parse(decodeURIComponent(escape(atob(j.content.replace(/\n/g,""))))));build();drawAdm();say("최신 내용을 불러왔어요.")}catch(e){say("불러오기 실패: "+e.message)}}
+async function save(){if(!ok())return;
+  try{say("저장하는 중이에요…");
+    for(const it of D.items){if(it.img&&it.img.indexOf("data:")===0){const p="images/"+it.id+"-"+Date.now()+".jpg";say("이미지 올리는 중: "+(it.title||p));await put(p,it.img.split(",")[1],"이미지 추가");it.img=p}}
+    await put(C.path,btoa(unescape(encodeURIComponent(JSON.stringify(D,null,2)))),"링크 앨범 내용 수정");
+    build();drawAdm();say("저장했어요. 사이트에 반영되기까지 1~2분 걸릴 수 있어요.")
+  }catch(e){say("저장 실패: "+e.message)}}
+
+/* click sound (Web Audio, 파일 없이 합성) */
+let AC=null,dn=null;
+const SND={
+ wood:[[[1250,.2,.05],[3300,.07,.022]],[[820,.12,.045],[2100,.04,.02]]],
+ glass:[[[2400,.12,.09],[5100,.04,.05]],[[1800,.07,.07],[3900,.025,.04]]],
+ key:[[[190,.28,.05],[430,.1,.03]],[[150,.14,.04],[320,.05,.025]]]};
+function tick(up){const k=D.site.sound||"wood";if(D.site.click===false||!SND[k])return;
+ try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();if(AC.state==="suspended")AC.resume();
+  const t=AC.currentTime,m=AC.createGain();m.gain.value=.9;m.connect(AC.destination);
+  SND[k][up?1:0].forEach(p=>{const o=AC.createOscillator(),g=AC.createGain();o.type="sine";o.frequency.value=p[0];
+   g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(p[1],t+.002);g.gain.exponentialRampToValueAtTime(.0001,t+p[2]);
+   o.connect(g);g.connect(m);o.start(t);o.stop(t+p[2]+.02)});
+  if(k==="key"){const len=Math.floor(AC.sampleRate*.025),b=AC.createBuffer(1,len,AC.sampleRate),d=b.getChannelData(0);
+   for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,2);
+   const s=AC.createBufferSource(),f=AC.createBiquadFilter(),g=AC.createGain();s.buffer=b;f.type="lowpass";f.frequency.value=2200;g.gain.value=up?.08:.16;s.connect(f);f.connect(g);g.connect(m);s.start(t)}
+ }catch(e){}}
+const CL='button,.disc,.pill';
+document.addEventListener('pointerdown',e=>{dn=e.target.closest(CL);if(dn)tick(false)});
+document.addEventListener('pointerup',e=>{const u=e.target.closest(CL);if(dn&&u===dn)setTimeout(()=>tick(true),45);dn=null});
+
+/* start */
+(async()=>{try{const r=await fetch("data.json?t="+Date.now());if(r.ok)D=norm(await r.json())}catch(e){}
+  build();if(location.hash==="#admin")openAdm()})();
+</script>
+</body>
+</html>
