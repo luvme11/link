@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Link Album</title>
+<link rel="icon" id="fav" href="data:,">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <style>
 :root{--bg:#f4f5f8;--ink:#1c2230;--mute:#7b8394;--panel:rgba(255,255,255,.78);--line:rgba(20,30,50,.08);--veil:255,255,255;--ring:rgba(255,255,255,.75);--dot:#cfd3dc;
@@ -126,7 +127,7 @@ let D={site:{title:"Link Album",speed:12},music:{url:"",volume:60},items:[
 const LS="linkalbum.gh";let C={owner:"",repo:"",branch:"main",token:"",path:"data.json"};
 try{Object.assign(C,JSON.parse(localStorage.getItem(LS)||"{}"))}catch(e){}
 const saveC=()=>{try{localStorage.setItem(LS,JSON.stringify(C))}catch(e){}};
-const norm=d=>({site:Object.assign({title:"Link Album",speed:12,click:true,sound:"wood"},d.site),music:Object.assign({url:"",volume:60},d.music),items:(d.items||[]).map(x=>Object.assign({id:rid(),title:"",sub:"",url:"",img:""},x))});
+const norm=d=>({site:Object.assign({title:"Link Album",speed:12,click:true,sound:"wood",favicon:"",cursor:""},d.site),music:Object.assign({url:"",volume:60},d.music),items:(d.items||[]).map(x=>Object.assign({id:rid(),title:"",sub:"",url:"",img:""},x))});
 const artOf=(it,i)=>it.img?'url("'+it.img+'")':GR[i%GR.length];
 
 /* carousel */
@@ -160,7 +161,7 @@ function render(){
   [...dots.children].forEach((b,i)=>{b.classList.toggle("on",i===cur);b.setAttribute("aria-label",D.items[i].title)});
   const l=D.items[cur]||{title:"",sub:""};
   $("#trk").textContent=n?"TRACK "+String(cur+1).padStart(2,"0"):"";
-  $("#ttl").textContent=l.title;$("#sub").textContent=l.sub;document.title=D.site.title||"Link Album";
+  $("#ttl").textContent=l.title;$("#sub").textContent=l.sub;document.title=D.site.title||"Link Album";applySite();
 }
 $("#prev").onclick=()=>go(cur-1);$("#next").onclick=()=>go(cur+1);
 $("#gob").onclick=()=>open((D.items[cur]||{}).url);
@@ -216,7 +217,7 @@ function drawAdm(){
   }else if(tab==="mu"){
     h='<h2>음악</h2><p class="d">오른쪽 아래 헤드셋 버튼을 누르면 이 유튜브 링크가 재생돼요. 영상, 재생목록 링크 모두 가능해요.</p><label class="f">유튜브 링크<input type="text" data-m="url" value="'+esc(D.music.url)+'" placeholder="https://www.youtube.com/watch?v="></label><label class="f">음량 <b id="vv">'+D.music.volume+'</b><input type="range" min="0" max="100" data-m="volume" value="'+D.music.volume+'"></label>'+sv;
   }else{
-    h='<h2>사이트</h2><p class="d">페이지 제목과 앨범이 도는 속도를 바꿔요. 숫자가 작을수록 빨라요.</p><label class="f">페이지 제목<input type="text" data-s="title" value="'+esc(D.site.title)+'"></label><label class="f">한 바퀴 도는 시간(초) <b id="sv">'+D.site.speed+'</b><input type="range" min="4" max="40" data-s="speed" value="'+D.site.speed+'"></label><label class="f"><input type="checkbox" data-s="click"'+(D.site.click===false?'':' checked')+'> 클릭 소리 켜기</label><label class="f">소리 종류<select data-s="sound"><option value="wood"'+(D.site.sound==='glass'||D.site.sound==='key'?'':' selected')+'>부드러운 톡</option><option value="glass"'+(D.site.sound==='glass'?' selected':'')+'>맑은 팅</option><option value="key"'+(D.site.sound==='key'?' selected':'')+'>키보드 딸깍</option></select></label>'+sv;
+    h='<h2>사이트</h2><p class="d">페이지 제목과 앨범이 도는 속도를 바꿔요. 숫자가 작을수록 빨라요.</p><label class="f">페이지 제목<input type="text" data-s="title" value="'+esc(D.site.title)+'"></label><label class="f">한 바퀴 도는 시간(초) <b id="sv">'+D.site.speed+'</b><input type="range" min="4" max="40" data-s="speed" value="'+D.site.speed+'"></label><label class="f"><input type="checkbox" data-s="click"'+(D.site.click===false?'':' checked')+'> 클릭 소리 켜기</label><label class="f">소리 종류<select data-s="sound"><option value="wood"'+(D.site.sound==='glass'||D.site.sound==='key'?'':' selected')+'>부드러운 톡</option><option value="glass"'+(D.site.sound==='glass'?' selected':'')+'>맑은 팅</option><option value="key"'+(D.site.sound==='key'?' selected':'')+'>키보드 딸깍</option></select></label>'+iconRow('favicon','파비콘','브라우저 탭에 보이는 작은 아이콘이에요.')+iconRow('cursor','마우스 커서','32px로 줄여서 적용돼요. 이미지의 왼쪽 위 끝이 클릭 지점이에요.')+sv;
   }
   $("#pn").innerHTML=h;
 }
@@ -228,7 +229,12 @@ pn.oninput=e=>{const t=e.target,d=t.dataset;
   else if(d.m){if(d.m==="volume"){D.music.volume=+t.value;$("#vv").textContent=t.value;cmd("setVolume",[+t.value])}else{D.music.url=t.value.trim();resetYT()}}
   else if(d.s==="click"){D.site.click=t.checked;tick(false)}else if(d.s==="sound"){D.site.sound=t.value;tick(false)}else if(d.s){if(d.s==="speed"){D.site.speed=+t.value;$("#sv").textContent=t.value;setSpeed()}else{D.site.title=t.value;render()}}
 };
-pn.onchange=e=>{const t=e.target;if(t.dataset.img===undefined)return;const f=t.files[0];if(!f)return;
+pn.onchange=e=>{const t=e.target;
+  if(t.dataset.sf){const f=t.files[0],k=t.dataset.sf;if(!f)return;const sz=k==="cursor"?32:64,im=new Image(),u=URL.createObjectURL(f);
+    im.onload=()=>{const c=document.createElement("canvas");c.width=c.height=sz;const r=Math.min(sz/im.width,sz/im.height),w=im.width*r,h=im.height*r;
+      c.getContext("2d").drawImage(im,k==="cursor"?0:(sz-w)/2,k==="cursor"?0:(sz-h)/2,w,h);D.site[k]=c.toDataURL("image/png");URL.revokeObjectURL(u);applySite();drawAdm();say("넣었어요. 저장을 눌러야 GitHub에 올라가요.")};
+    im.onerror=()=>say("이미지를 읽지 못했어요.");im.src=u;return}
+  if(t.dataset.img===undefined)return;const f=t.files[0];if(!f)return;
   const im=new Image(),u=URL.createObjectURL(f);
   im.onload=()=>{const k=Math.min(1,900/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);
     const g=c.getContext("2d");g.fillStyle="#fff";g.fillRect(0,0,c.width,c.height);g.drawImage(im,0,0,c.width,c.height);
@@ -239,6 +245,7 @@ pn.onclick=e=>{const b=e.target.closest("[data-a]");if(!b)return;const a=b.datas
   else if(a==="dn"&&i<L.length-1){[L[i+1],L[i]]=[L[i],L[i+1]]}
   else if(a==="del"){L.splice(i,1)}
   else if(a==="rm"){L[i].img=""}
+  else if(a==="rmsf"){D.site[b.dataset.k]="";applySite();drawAdm();say("제거했어요. 저장을 눌러야 반영돼요.");return}
   else if(a==="add"){L.push({id:rid(),title:"새 링크",sub:"",url:"https://",img:""});cur=L.length-1}
   else if(a==="save")return save();
   else if(a==="test")return test();
@@ -258,10 +265,21 @@ async function loadGH(){if(!ok())return;say("불러오는 중이에요…");try{
 async function save(){if(!ok())return;
   try{say("저장하는 중이에요…");
     for(const it of D.items){if(it.img&&it.img.indexOf("data:")===0){const p="images/"+it.id+"-"+Date.now()+".jpg";say("이미지 올리는 중: "+(it.title||p));await put(p,it.img.split(",")[1],"이미지 추가");it.img=p}}
+    for(const k of ["favicon","cursor"]){const v=D.site[k];if(v&&v.indexOf("data:")===0){const p="images/"+k+"-"+Date.now()+".png";say(k+" 올리는 중");await put(p,v.split(",")[1],k+" 추가");D.site[k]=p}}
     await put(C.path,btoa(unescape(encodeURIComponent(JSON.stringify(D,null,2)))),"링크 앨범 내용 수정");
     build();drawAdm();say("저장했어요. 사이트에 반영되기까지 1~2분 걸릴 수 있어요.")
   }catch(e){say("저장 실패: "+e.message)}}
 
+/* favicon / cursor */
+const DEFFAV="data:image/svg+xml,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" fill="#4a5675"/><circle cx="20" cy="20" r="6.5" fill="#eef2f9"/><circle cx="20" cy="20" r="2.6" fill="#2b3550"/></svg>');
+function applySite(){
+  $("#fav").href=D.site.favicon||DEFFAV;
+  let st=$("#curs");if(!st){st=document.createElement("style");st.id="curs";document.head.appendChild(st)}
+  const c=D.site.cursor;
+  st.textContent=c?'html,body{cursor:url("'+c+'") 0 0,auto!important}button,.disc,.pill,.go,.fab,select,input[type=range],label{cursor:url("'+c+'") 0 0,pointer!important}':"";
+}
+function iconRow(k,l,d){const v=D.site[k];
+  return '<div class="row"><div class="f" style="margin:0">'+l+'<br>'+d+'</div><div class="im"><span class="th" style="background-image:'+(v?esc('url("'+v+'")'):'none')+'"></span><label class="pill">이미지 첨부<input type="file" accept="image/*" data-sf="'+k+'" hidden></label>'+(v?'<button class="pill" data-a="rmsf" data-k="'+k+'">제거</button>':'')+'</div></div>'}
 /* click sound (Web Audio, 파일 없이 합성) */
 let AC=null,dn=null;
 const SND={
