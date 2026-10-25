@@ -2,6 +2,8 @@
   "site": {
     "title": "Link",
     "speed": 12,
+    "click": true,
+    "sound": "wood",
     "favicon": "images/favicon-1792892956392.png",
     "cursor": "images/cursor-1792892958306.png"
   },
@@ -42,7 +44,7 @@
       "id": "vcbfoj",
       "title": "OOC",
       "sub": "OOC 백업",
-      "url": "https://",
+      "url": "https://luvme11.github.io/OOC/",
       "img": "images/vcbfoj-1792892897869.jpg"
     }
   ]
